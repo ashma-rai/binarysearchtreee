@@ -6,14 +6,15 @@ using namespace std;
 extern void returnVal(int val,int counter,int prevPos);
 extern bool displaySearchedNode;
 
-//extern int searchedIndex;
-//extern int arrayIndex;
-//extern arrayNodeStruct arrayNode[100];
 class bstClass
 {
     public:
-
-
+struct traversedArray{
+int val;
+char value[5];
+};
+traversedArray orderedArray[100];
+int traversedIndex=0;
 //traversedArrayStruct preArray[100];
 int counter=0;
 

@@ -88,15 +88,6 @@ void drawBranch(int posX,int posY,int index)
 
 void drawNode(int posX,int posY,int index)//draws ball
 {
-   /* {   glColor3ub(58,62,78);
-        glBegin(GL_POLYGON);
-        for(int i=0; i<360; i++)
-        {   theta = i;
-            glVertex2f(posX+10 +RADNODE*cos(theta),posY -10+RADNODE*sin(theta));
-        }
-        glEnd();
-    }
-    */
 
     {   glColor3f(0,0,0);
         glBegin(GL_POLYGON);

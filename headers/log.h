@@ -1,13 +1,23 @@
 #ifndef LOG_H_INCLUDED
 #define LOG_H_INCLUDED
+#include "bstClass.h"
 #include<GL/glut.h>
 #define PRINTPOSX -570
 #define PRINTPOSY -500
 #define DRAWLOGPOSX 0
 #define DRAWLOGPOSY -480
 extern void renderBitmap(float ,float,void*,char*);
+extern bstClass bstobj;
+extern bool preorderedNode;
 char buffer[100]={};
 
+void printOrderedNodes()
+{
+    for(int index=0; index<arrayIndex;index++)
+   {sprintf_s(buffer,bstobj.orderedArray[index].value);
+    renderBitmap(PRINTPOSX+400+index*50,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+   }
+}
 void displayLogBackground()
 {
     glColor3f(0,0,0);
@@ -41,7 +51,24 @@ void printInitialLog()
 }
 void printPreorderLog()
 {
-
+    glColor3f(1,0,0);
+    sprintf_s(buffer,">>Preordered Nodes : ");
+    renderBitmap(PRINTPOSX,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+    printOrderedNodes();
+}
+void printInorderLog()
+{
+    glColor3f(1,0,0);
+    sprintf_s(buffer,">>Inordered Nodes : ");
+    renderBitmap(PRINTPOSX,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+    printOrderedNodes();
+}
+void printPostorderLog()
+{
+    glColor3f(1,0,0);
+    sprintf_s(buffer,">>Postordered Nodes : ");
+    renderBitmap(PRINTPOSX,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+    printOrderedNodes();
 }
 void printSearchLog(bool searchedNodeFound, char* value)
 {
@@ -52,11 +79,11 @@ void printSearchLog(bool searchedNodeFound, char* value)
     renderBitmap(PRINTPOSX,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
 
     sprintf_s(buffer,value);
-    renderBitmap(PRINTPOSX+400,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+    renderBitmap(PRINTPOSX+350,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
     if(searchedNodeFound)
     {
     sprintf_s(buffer,"] is present in the tree.");
-    renderBitmap(PRINTPOSX+500,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
+    renderBitmap(PRINTPOSX+450,PRINTPOSY, GLUT_BITMAP_HELVETICA_18,buffer);
 
     }
     else{

@@ -76,8 +76,8 @@ bstClass::~bstClass()
         if(root != nullptr)
         {
             std::cout << root->data <<"  ";
-            //preArray[traversedIndex].val=root->data;
-            //traversedIndex++;
+            orderedArray[traversedIndex].val=root->data;
+            traversedIndex++;
             preorder(root->left);
             preorder(root->right);
         }
@@ -89,6 +89,8 @@ bstClass::~bstClass()
         {
             preorder(root->left);
             std::cout << root->data <<"  ";
+            orderedArray[traversedIndex].val=root->data;
+            traversedIndex++;
             preorder(root->right);
         }
     }
@@ -100,6 +102,8 @@ bstClass::~bstClass()
             preorder(root->left);
             preorder(root->right);
             std::cout << root->data <<"  ";
+            orderedArray[traversedIndex].val=root->data;
+            traversedIndex++;
         }
     }
 

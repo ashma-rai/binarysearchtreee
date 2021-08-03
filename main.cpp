@@ -22,6 +22,8 @@ int searchedIndex=-1;
 int deltaX=-1050,deltaY=450;
 int prevTreePos,prevTreeDepth;
 char tempKeyPressed[5];
+int positionsInArrayNode[15];
+int kIndex=-1;//k for positionsInArrayNode
 
 bool displayDrawNodeMotion=false;
 bool callTimer=false;
@@ -35,7 +37,8 @@ bool searchedNode=false;
 bool preorderedNode=false;
 bool postorderedNode=false;
 bool inorderedNode=false;
-
+bool traversalRequired=false;
+bool displayTraversedNodes=false;
 
 void init();
 void display();
@@ -76,11 +79,23 @@ void resetKeyPressed()
     while(i>=0)
             {
             keyPressed[i]='\0';
-           // arrayNode[arrayIndex].value[i]='\0';
+            //arrayNode[arrayIndex].value[i]='\0';
             i--;
 
             }
             i=0;
+}
+
+void resetTraversalDetails()
+{
+    for(int k=0;k<=arrayIndex;k++){
+    for(int j=0;j<5;j++) bstobj.orderedArray[k].value[j]='\0';
+    positionsInArrayNode[k]=-1;
+    }
+    bstobj.traversedIndex=0;
+    kIndex=-1;
+
+
 }
 
 void menuDetails()
@@ -103,35 +118,47 @@ void menuDetails()
 
 void goMenu(int menuVal)
 {   val=menuVal;
+    resetTraversalDetails();
+    preorderedNode=false;
+    postorderedNode=false;
+    inorderedNode=false;
+    inputKeyboardVal=false;
+    inputNodeToSearch=false;
+    displaySearchedNode=false;
+    displayTraversedNodes=false;
+    traversalRequired=false;
+    searchedNode=false;
+    insertedNode=false;
     switch (menuVal)
     {
-        case 1:inputKeyboardVal=true;
-                inputNodeToSearch=false;
-                displaySearchedNode=false;
+        case 1:
 
+                inputKeyboardVal=true;
                keyboardobj.displayKeyboard();
                keyboardobj.displayInsert();
 
 
                break;
         case 2:
+                traversalRequired=true;
                 bstobj.inorder(bstobj.tree);
                 updateTree();
                 cout<<endl;
                 break;
         case 3:
+                traversalRequired=true;
                 bstobj.preorder(bstobj.tree);
                 updateTree();
                 cout<<endl;
                 break;
         case 4:
+                traversalRequired=true;
                 bstobj.postorder(bstobj.tree);
+                updateTree();
                 cout<<endl;
                 break;
         case 5:
                 inputKeyboardVal=true;
-                inputNodeToSearch=true;
-
                 keyboardobj.displayKeyboard();
                 keyboardobj.displaySearch();
                 break;
@@ -197,6 +224,7 @@ void keyboard(unsigned char key, int x,int y)
     }
 }
 
+
 void updateTree()
 {
     if(!enterNotPressed)
@@ -236,11 +264,42 @@ void updateTree()
         resetKeyPressed();
         keyboardobj.closeKeyboard();
     }
-    if(val==3)
-            {//preorder
 
-
+    if(traversalRequired){
+        if(val==3||val==4||val==2)
+            {cout<<endl;
+                if(val==2) cout<<"In-";
+                else if (val==3) cout<<"Pre-";
+                else cout<<"Post-";
+            cout<<"orderedArray= ";
+            for(int k=0;k<bstobj.traversedIndex;k++)
+            {sprintf(bstobj.orderedArray[k].value,"%ld", bstobj.orderedArray[k].val);
+            cout<<bstobj.orderedArray[k].value<<" ";
             }
+
+            displayDrawNodeMotion=false;
+            displaySearchedNode=false;
+
+            for(int l=0;l<=bstobj.traversedIndex;l++){
+                for(int j=0; j<=arrayIndex;j++){
+                    if( bstobj.orderedArray[l].val==arrayNode[j].val)
+                       {positionsInArrayNode[l]=j;
+                       }
+                }
+            }
+            cout<<endl<<"positionsInArrayNode= ";
+            for(int k=0;k<arrayIndex;k++){
+                cout<<positionsInArrayNode[k]<<" ";
+            }
+            cout<<endl;
+            if(val==2) inorderedNode=true;
+                else if (val==3) preorderedNode=true;
+                else postorderedNode=true;
+            displayTraversedNodes=true;
+            searchedBlinkRed=true;
+            }
+
+    }
     enterNotPressed=true;
     inputKeyboardVal=false;
     callTimer=true;
@@ -263,6 +322,22 @@ void timer(int val)
             else searchedBlinkRed=true;
             }
 
+
+    }
+    else if(traversalRequired)
+    {
+        glutTimerFunc(1000,timer,0);
+        kIndex++;
+        if(kIndex>(arrayIndex-1))
+        {
+            displayTraversedNodes=false;
+            searchedBlinkRed=false;
+            traversalRequired=false;
+            //preorderedNode=true;
+            //resetTraversalDetails();
+            //glutPostRedisplay()
+            //return;
+        }
 
     }
     else if(displayDrawNodeMotion)
@@ -299,6 +374,7 @@ void timer(int val)
                 }
 
     }
+
 
     }
 
@@ -374,11 +450,25 @@ i=0;
         drawNodeText(arrayNode[searchedIndex].posX,arrayNode[searchedIndex].posY,searchedIndex);
         }
     }
+    else if(displayTraversedNodes)
+    {
+        if(kIndex<=arrayIndex)
+        {drawSearchedNode(arrayNode[positionsInArrayNode[kIndex]].posX, arrayNode[positionsInArrayNode[kIndex]].posY);
+        drawNodeText(arrayNode[positionsInArrayNode[kIndex]].posX,arrayNode[positionsInArrayNode[kIndex]].posY,positionsInArrayNode[kIndex]);
+        }
+        else return;
+    }
+
+
+    //if(val==3) preorderedNode=true;
     displayLogBackground();
     if(insertedNode) printInsertLog(tempKeyPressed);
     else if(searchedNode) printSearchLog(searchedNodeFound,tempKeyPressed);
+    else if(inorderedNode) printInorderLog();
     else if(preorderedNode) printPreorderLog();
+    else if(postorderedNode) printPostorderLog();
     else printInitialLog();
+
 //plank
     glColor3f(0,0,0);
     glLineWidth(100);
@@ -401,16 +491,6 @@ i=0;
 
     if(displayDrawNodeMotion)
     {
-    /*//axis
-     glLineWidth(1);
-     glBegin(GL_LINES);
-
-    glVertex2f(-960,0);
-    glVertex2f(960,0);
-    glVertex2f(0,540);
-    glVertex2f(0,-540);
-    glEnd();
-    */
     if(!displaySearchedNode)
     drawNodeAndText(deltaX,deltaY,arrayIndex);
 
