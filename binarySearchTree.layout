@@ -2,9 +2,49 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="classes\bstClass.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="271" topLine="0" />
+			<Cursor1 position="1981" topLine="11" />
 		</Cursor>
+		<Folding>
+			<Collapse line="10" />
+			<Collapse line="15" />
+		</Folding>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="9734" topLine="356" />
+		</Cursor>
+		<Folding>
+			<Collapse line="53" />
+			<Collapse line="64" />
+			<Collapse line="74" />
+			<Collapse line="86" />
+			<Collapse line="331" />
+		</Folding>
+	</File>
+	<File name="headers\drawing.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1101" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="classes\bstClass.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="468" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="classes\keyboardEventHandler.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="235" topLine="40" />
+		</Cursor>
+	</File>
+	<File name="headers\log.h" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1949" topLine="17" />
+		</Cursor>
+		<Folding>
+			<Collapse line="11" />
+			<Collapse line="34" />
+		</Folding>
 	</File>
 </CodeBlocks_layout_file>

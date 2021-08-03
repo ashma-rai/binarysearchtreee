@@ -3,10 +3,10 @@
 #include<GL/glut.h>
 #include "bstClass.h"
 #include "keyboardEventHandler.h"
-//#include "drawTree.h"
 #include "drawing.h"
 #include"log.h"
 #include<math.h>
+#include<string>
 #define RADNODE 50
 using namespace std;
 bstClass bstobj;
@@ -21,17 +21,34 @@ int rootDepth,rootPos;
 int searchedIndex=-1;
 int deltaX=-1050,deltaY=450;
 int prevTreePos,prevTreeDepth;
-bool displayDrawNode=false;
+char tempKeyPressed[5];
+
+bool displayDrawNodeMotion=false;
 bool callTimer=false;
 bool finalPos=false;
 bool displaySearchedNode=false;
 bool inputNodeToSearch=false;
 bool searchedNodeFound=false;
+bool displayAllNodes=true;
+bool insertedNode=false;
+bool searchedNode=false;
+bool preorderedNode=false;
+bool postorderedNode=false;
+bool inorderedNode=false;
+
 
 void init();
 void display();
 void reshape(int ,int);
 void timer (int);
+void goMenu(int);
+void menuDetails();
+void returnVal(int,int,int);
+void updateTree();
+void renderBitmap(float,float, void*,char*);
+void resetKeyPressed();
+void keyboard(unsigned char, int, int);
+
 
 void renderBitmap(float x, float y, void *font, char *str)
     {
@@ -66,134 +83,6 @@ void resetKeyPressed()
             i=0;
 }
 
-void updateTree()
-{
-    if(!enterNotPressed)
-    {
-        if(val==1)
-           {
-            bstobj.insertElement(bstobj.tree,num);
-            cout<<num<<" inserted successfully"<<endl;
-
-            }
-        if(val==5)
-            {bstobj.searchElement(bstobj.tree,num);
-            for(int l=0;l<=arrayIndex;l++)
-            {
-                if(arrayNode[l].val==num)
-                {
-                    searchedIndex=l;
-                    searchedNodeFound=true;
-                    break;
-                }
-
-
-            }
-            cout<<"Search for "<<num<<" completed"<<endl;
-            }
-        resetKeyPressed();
-        keyboardobj.closeKeyboard();
-        //cout<<"Keyboard Closed"<<endl;
-    }
-    enterNotPressed=true;
-    inputKeyboardVal=false;
-    displayDrawNode=true;
-
-     //if(!displaySearchedNode)
-     {callTimer=true;
-    glutTimerFunc(100, timer,0);
-     }
-     //else glutPostRedisplay();
-
-}
-
-void keyboard(unsigned char key, int x,int y)
-{   if(inputKeyboardVal)
-    {
-        if(!inputNodeToSearch)
-        {if(key>='0'&&key<='9')
-               {
-                keyPressed[i]=key;
-                arrayNode[arrayIndex].value[i]=key;
-                i++;
-                glutPostRedisplay();
-                }
-        }
-        else
-        {if(key>='0'&&key<='9')
-               {
-                keyPressed[i]=key;
-                i++;
-                glutPostRedisplay();
-                }
-
-        }
-
-        if(key==8)//backspace delete all
-               {
-                resetKeyPressed();
-                cout<<"Backspace Called: keyPressed reset"<<endl;
-                glutPostRedisplay();
-                }
-        if(key==10 ||key==13)//enter
-            {  if(keyPressed[0]!='\0')
-                {   num=atoi(keyPressed);
-                    cout<<"Node val entered ="<<num<<endl;
-                    if(!displaySearchedNode)
-                        arrayNode[arrayIndex].val=num;
-                    //cout<<"arraynode["<<arrayIndex<<"]->val= "<<arrayNode[arrayIndex].value<<endl;
-                    //erase screen
-                    keyX=-80;
-                    enterNotPressed=false;
-                    glutPostRedisplay();
-                    updateTree();
-                    //cout<<"TREE UPDATED"<<endl;
-                }
-
-            }
-            //glFlush();
-            glutSwapBuffers();
-    }
-}
-
-void goMenu(int menuVal)
-{   val=menuVal;
-    switch (menuVal)
-    {
-        case 1:inputKeyboardVal=true;
-        inputNodeToSearch=false;
-        displaySearchedNode=false;
-               keyboardobj.displayKeyboard();
-               keyboardobj.displayInsert();
-
-
-               break;
-        case 2:
-                bstobj.inorder(bstobj.tree);
-                cout<<endl;
-                break;
-        case 3:
-                bstobj.preorder(bstobj.tree);
-                cout<<endl;
-                break;
-        case 4:
-                bstobj.postorder(bstobj.tree);
-                cout<<endl;
-                break;
-        case 5:
-                inputKeyboardVal=true;
-                inputNodeToSearch=true;
-                keyboardobj.displayKeyboard();
-                keyboardobj.displaySearch();
-                break;
-        case 6:
-                exit(0);
-                break;
-    }
-    glutPostRedisplay();
-
-}
-
 void menuDetails()
 {
     glutCreateMenu(goMenu);
@@ -211,6 +100,154 @@ void menuDetails()
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+
+void goMenu(int menuVal)
+{   val=menuVal;
+    switch (menuVal)
+    {
+        case 1:inputKeyboardVal=true;
+                inputNodeToSearch=false;
+                displaySearchedNode=false;
+
+               keyboardobj.displayKeyboard();
+               keyboardobj.displayInsert();
+
+
+               break;
+        case 2:
+                bstobj.inorder(bstobj.tree);
+                updateTree();
+                cout<<endl;
+                break;
+        case 3:
+                bstobj.preorder(bstobj.tree);
+                updateTree();
+                cout<<endl;
+                break;
+        case 4:
+                bstobj.postorder(bstobj.tree);
+                cout<<endl;
+                break;
+        case 5:
+                inputKeyboardVal=true;
+                inputNodeToSearch=true;
+
+                keyboardobj.displayKeyboard();
+                keyboardobj.displaySearch();
+                break;
+        case 6:
+                exit(0);
+                break;
+    }
+    glutPostRedisplay();
+
+}
+
+void keyboard(unsigned char key, int x,int y)
+{   if(inputKeyboardVal)
+    {
+        if (inputNodeToSearch)
+        {if(key>='0'&&key<='9')
+               {
+                keyPressed[i]=key;
+                i++;
+                glutPostRedisplay();
+                }
+
+        }
+        else
+        {if(key>='0'&&key<='9')
+               {
+                keyPressed[i]=key;
+                arrayNode[arrayIndex].value[i]=key;
+                i++;
+                glutPostRedisplay();
+                }
+        }
+
+
+        if(key==8)//backspace delete all
+               {
+                resetKeyPressed();
+                cout<<"Backspace Called: keyPressed reset"<<endl;
+                glutPostRedisplay();
+                }
+        if(key==10 ||key==13)//enter
+            {  if(keyPressed[0]!='\0')
+                {   num=atoi(keyPressed);
+                    cout<<"Node val entered ="<<num<<endl;
+                    if(!inputNodeToSearch)
+                        {arrayNode[arrayIndex].val=num;
+                        searchedNode=false;
+                        }
+                    else insertedNode=false;
+
+
+
+                    keyX=-80;
+                    enterNotPressed=false;
+                    glutPostRedisplay();
+                    updateTree();
+                    //cout<<"TREE UPDATED"<<endl;
+                }
+
+            }
+            //glFlush();
+            glutSwapBuffers();
+    }
+}
+
+void updateTree()
+{
+    if(!enterNotPressed)
+    {
+        if(val==1)
+           {
+            bstobj.insertElement(bstobj.tree,num);
+            displayDrawNodeMotion=true;
+            insertedNode=true;
+            strcpy(tempKeyPressed,keyPressed);
+            cout<<num<<" inserted successfully"<<endl;
+
+            }
+
+        if(val==5)
+            {bstobj.searchElement(bstobj.tree,num);
+            displayDrawNodeMotion=false;
+            displaySearchedNode=true;
+            searchedNode=true;
+            for(int l=0;l<=arrayIndex;l++)
+            {
+                if(arrayNode[l].val==num)
+                {
+                    searchedIndex=l;
+                    searchedNodeFound=true;
+
+                    break;
+                }
+                else searchedNodeFound=false;
+
+
+            }
+            strcpy(tempKeyPressed,keyPressed);
+
+            cout<<"Search for "<<num<<" completed"<<endl;
+            }
+        resetKeyPressed();
+        keyboardobj.closeKeyboard();
+    }
+    if(val==3)
+            {//preorder
+
+
+            }
+    enterNotPressed=true;
+    inputKeyboardVal=false;
+    callTimer=true;
+    glutTimerFunc(100, timer,0);
+
+}
+
 void timer(int val)
 {
 
@@ -219,10 +256,19 @@ void timer(int val)
 
 
     //identify final pos of node
-    if(!displaySearchedNode)
+    if(displaySearchedNode){
+        glutTimerFunc(1000,timer,0);
+        if(searchedNodeFound){
+            if(searchedBlinkRed) searchedBlinkRed=false;
+            else searchedBlinkRed=true;
+            }
+
+
+    }
+    else if(displayDrawNodeMotion)
     {glutTimerFunc(1000/60,timer,0);
         if(deltaX<=-650)
-        {deltaX+=10;
+        {deltaX+=5;
         return;
         }
     //if(deltaY<=450 ){
@@ -234,7 +280,7 @@ void timer(int val)
                             {deltaX+=10;
                             }
                     else{
-                        displayDrawNode=true;
+                        //displayDrawNodeMotion=true;
                         callTimer=false;
                         finalPos=true;
                         arrayNode[arrayIndex].posX=deltaX;
@@ -253,16 +299,11 @@ void timer(int val)
                 }
 
     }
-    else{
-        glutTimerFunc(1000,timer,0);
-        if(searchedBlinkRed) searchedBlinkRed=false;
-        else searchedBlinkRed=true;
 
-    }
     }
 
 
-    }
+}
 
 
 
@@ -302,12 +343,13 @@ void reshape(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 
 }
+
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 
-    if(displayDrawNode)
+    if(displayAllNodes)
     {int i=0;
     while(i<(arrayIndex))
     {
@@ -331,20 +373,35 @@ i=0;
         drawSearchedNode(arrayNode[searchedIndex].posX,arrayNode[searchedIndex].posY);
         drawNodeText(arrayNode[searchedIndex].posX,arrayNode[searchedIndex].posY,searchedIndex);
         }
-        printSearchLog(searchedNodeFound,arrayNode[searchedIndex].value);
-
     }
-
-
-
-    if(displayDrawNode)
-    {
-    glColor3f(1,0.5,1);
+    displayLogBackground();
+    if(insertedNode) printInsertLog(tempKeyPressed);
+    else if(searchedNode) printSearchLog(searchedNodeFound,tempKeyPressed);
+    else if(preorderedNode) printPreorderLog();
+    else printInitialLog();
+//plank
+    glColor3f(0,0,0);
+    glLineWidth(100);
+    glBegin(GL_LINES);
+    glVertex2f(-960,380);
+    glVertex2f(-700,380);
+    glEnd();
+    glColor3ub(93,93,93);
+    glLineWidth(15);
+    glBegin(GL_LINES);
+    glVertex2f(-960,390);
+    glVertex2f(-705,390);
+    glEnd();
+    glColor3ub(212,208,199);
     glLineWidth(10);
     glBegin(GL_LINES);
     glVertex2f(-960,390);
-    glVertex2f(-700,390);
+    glVertex2f(-710,390);
     glEnd();
+
+    if(displayDrawNodeMotion)
+    {
+    /*//axis
      glLineWidth(1);
      glBegin(GL_LINES);
 
@@ -353,10 +410,14 @@ i=0;
     glVertex2f(0,540);
     glVertex2f(0,-540);
     glEnd();
+    */
     if(!displaySearchedNode)
     drawNodeAndText(deltaX,deltaY,arrayIndex);
 
     }
+
+
+
 
     if(inputKeyboardVal)
     {keyboardobj.displayKeyboard();

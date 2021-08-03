@@ -28,9 +28,8 @@ void drawNodeAndText(int posX,int posY,int index)
 }
 
 void drawSearchedNode(int posX,int posY){
- {   if(searchedBlinkRed)
-        glColor3f(0.9,0,0);
-    else glColor3f(0,0,0);
+ {   glColor3f(0,0,0);
+
         glBegin(GL_POLYGON);
         for(int i=0; i<360; i++)
         {   theta = i;
@@ -39,7 +38,9 @@ void drawSearchedNode(int posX,int posY){
         glEnd();
     }
     //dark
-    {   glColor3ub(22,68,90);
+    {  if(searchedBlinkRed)
+        glColor3f(0.6,0,0);
+    else glColor3ub(22,68,90);
         glBegin(GL_POLYGON);
         for(int i=0; i<360; i++)
         {   theta = i;
@@ -48,7 +49,9 @@ void drawSearchedNode(int posX,int posY){
         glEnd();
     }
     //skyblue
-    {   glColor3ub(162,210,232);
+    {  if(searchedBlinkRed)
+        glColor3f(1,0,0);
+    else glColor3ub(162,210,232);
         glBegin(GL_POLYGON);
         for(int i=0; i<360; i++)
         {   theta = i;
@@ -57,7 +60,9 @@ void drawSearchedNode(int posX,int posY){
         glEnd();
     }
     //white
-    {   glColor3ub(255,255,255);
+    {   if(searchedBlinkRed)
+        glColor3f(1,0,0);
+    else glColor3ub(255,255,255);
         glBegin(GL_POLYGON);
         for(int i=0; i<360; i++)
         {   theta = i;
@@ -75,13 +80,7 @@ void drawBranch(int posX,int posY,int index)
     glVertex2f(posX,posY);
     glVertex2f(arrayNode[index].prevposX,arrayNode[index].prevposY);
     glEnd();
-    /*glLineWidth(2);
-    glColor3ub(162,210,232);
-    glBegin(GL_LINES);
-    glVertex2f(posX,posY);
-    glVertex2f(arrayNode[index].prevposX,arrayNode[index].prevposY);
-    glEnd();
-    */
+
 }
 
 }

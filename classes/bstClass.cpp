@@ -4,6 +4,7 @@ bstClass::bstClass()
     //ctor
     tree=nullptr;
 
+
 }
 
 bstClass::~bstClass()
@@ -75,6 +76,8 @@ bstClass::~bstClass()
         if(root != nullptr)
         {
             std::cout << root->data <<"  ";
+            //preArray[traversedIndex].val=root->data;
+            //traversedIndex++;
             preorder(root->left);
             preorder(root->right);
         }

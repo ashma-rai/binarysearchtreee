@@ -5,13 +5,18 @@
 using namespace std;
 extern void returnVal(int val,int counter,int prevPos);
 extern bool displaySearchedNode;
+
 //extern int searchedIndex;
 //extern int arrayIndex;
 //extern arrayNodeStruct arrayNode[100];
 class bstClass
 {
     public:
+
+
+//traversedArrayStruct preArray[100];
 int counter=0;
+
 struct node
 {
     int data;
